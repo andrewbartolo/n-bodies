@@ -5,6 +5,8 @@
 
 #include "body.h"
 
+#define G 6.67384e-11   // universal gravitational constant
+
 
 class Universe {
   //friend class Body;

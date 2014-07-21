@@ -9,7 +9,7 @@ using namespace std;
 
 Body::Body(double x, double y, double z, double vx, double vy, double vz,
 	                 double mass, double radius, unsigned long long id) :
-                   x(x), y(y), z(z), vx(x), vy(y), vz(z), mass(mass), radius(radius), id(id) {}
+                   x(x), y(y), z(z), vx(vx), vy(vy), vz(vz), mass(mass), radius(radius), id(id) {}
 
 /**
  * Uses the supplied force to compute acceleration
@@ -21,9 +21,9 @@ void Body::applyForce(const Force &f) {
   vx += (f.x_comp / mass);
   vy += (f.y_comp / mass);
   vz += (f.z_comp / mass);
-  // cout << "force x-component: " << f.x_comp << endl;
-  // cout << "force y-component: " << f.y_comp << endl;
-  // cout << "force z-component: " << f.z_comp << endl;
+  cout << "force x-component: " << f.x_comp << endl;
+  cout << "force y-component: " << f.y_comp << endl;
+  cout << "force z-component: " << f.z_comp << endl;
 
 }
 
@@ -35,7 +35,7 @@ void Body::updatePosition() {
   x += vx;
   y += vy;
   z += vz;
-  // cout << "new x-position: " << x << endl;
-  // cout << "new y-position: " << y << endl;
-  // cout << "new z-position: " << z << endl;
+  cout << "new x-position: " << x << endl;
+  cout << "new y-position: " << y << endl;
+  cout << "new z-position: " << z << endl;
 }

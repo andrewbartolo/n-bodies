@@ -30,8 +30,12 @@ Universe::Universe(size_t num_bodies) {//: bodies(num_bodies) {
   // fill the vector with randomly-created bodies
   // bodies are constructed in-place using emplace, w/o copy constructor
   for (size_t i = 0; i < num_bodies; ++i)
-    bodies.emplace_back(RAND_DOUBLE, RAND_DOUBLE, RAND_DOUBLE, RAND_DOUBLE,
+/*    bodies.emplace_back(RAND_DOUBLE, RAND_DOUBLE, RAND_DOUBLE, RAND_DOUBLE,
                            RAND_DOUBLE, RAND_DOUBLE, RAND_DOUBLE, RAND_DOUBLE,
+                           i);*/
+
+    bodies.emplace_back(RAND_DOUBLE, RAND_DOUBLE, RAND_DOUBLE, 0,
+                           0, 0, RAND_DOUBLE, RAND_DOUBLE,
                            i);
 
   // cout << "num_bodies was " << num_bodies << endl;
