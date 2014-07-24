@@ -100,7 +100,7 @@ void pheap_init() {
  * When some block's next pointer is null, we have reached
  * the end of the freelist.
  */
-void *pmalloc(size_t size) {
+void *pmalloc(const size_t size) {
   if (first_run) pheap_init();
   // cannot malloc a chunk of size 0, nor if no free chunks available
   if (0 == size || NULL == handle->freelist) return NULL;
@@ -153,18 +153,18 @@ void *pmalloc(size_t size) {
  * Naive realloc; simply allocates a new block of size 'size', memcpys the old contents over,
  * and frees the new block.
  */
-void *prealloc(void *ptr, size_t size) {
+void *prealloc(const void *ptr, const size_t size) {
   void *new_chunk = pmalloc(size);
   memcpy(new_chunk, ptr, ((mem_chunk_hdr_t *)ptr - 1)->size);   // TODO - make a macro to get size from payload ptr
-  pfree(ptr)
-;  return new_chunk;
+  pfree(ptr);
+  return new_chunk;
 }
 
 // prepends the newly-freed block to the freelist.  basic; does not coalesce.
-void pfree(void *ptr) {
+void pfree(const void *ptr) {
   if (first_run) pheap_init();
 
-  mem_chunk_hdr_t *newly_freed = (mem_chunk_hdr_t *)ptr - 1;
+  mem_chunk_hdr_t *newly_freed = (mem_chunk_hdr_t *)ptr - 1;    // TODO - make a macro...
   newly_freed->next = handle->freelist;
   handle->freelist = newly_freed;
 }
@@ -175,15 +175,12 @@ size_t psync() {
   if (first_run) pheap_init();
 
   struct timeval before, after, elapsed;
-
+  // note that gettimeofday() measures *wall-clock* time...
   gettimeofday(&before, NULL);
   msync(handle, sizeof(pheap_t), MS_SYNC);
   gettimeofday(&after, NULL);
 
   timersub(&after, &before, &elapsed);
 
-  // note that gettimeofday() measures *wall-clock* time...
-  // should we assume that time required for disk write >> time for context switches, etc?
-  // printf("%ju page(s) written back in %ld s, %ld μs\n", NUM_PAGES(size), elapsed.tv_sec, elapsed.tv_usec);
   return (1000000 * elapsed.tv_sec) + elapsed.tv_usec;
 }

@@ -13,11 +13,11 @@
 // persistent heap.  We recommend that the client call pheap_init *every time* at the start of his/her program
 extern void pheap_init();
 
-extern void *pmalloc(size_t size);
+extern void *pmalloc(const size_t size);
 
-extern void *prealloc(void *ptr, size_t size);
+extern void *prealloc(const void *ptr);
 
-extern void pfree(void *ptr);
+extern void pfree(const void *ptr);
 
 extern size_t psync();
 

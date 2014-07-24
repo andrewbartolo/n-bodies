@@ -3,9 +3,6 @@
 #include <time.h>
 #include <stdlib.h>
 
-// #include <GL/glew.h>
-// #include <GLFW/glfw3.h>    // check out bash history on your desktop to get a list of dependencies...
-
 #include "universe.h"
 
 #define RAND_DOUBLE (((double)rand()) / (double)RAND_MAX)   // uniform? distribution btwn [0, 1)
@@ -16,6 +13,8 @@ using namespace std;
  * TODO - comment the header file, not the .cc file...
  */
 
+unsigned int rand_r_seed;
+
 
 // can't set vector size at declaration unless the contained type has a
 // default constructor.  Body does not, so we call reserve() in the
@@ -24,6 +23,7 @@ Universe::Universe(const size_t num_bodies) {//: bodies(num_bodies) {
   bodies.reserve(num_bodies);
   turns_completed = 0;
   //srand(time(NULL));      // TODO - possible issue here with static storage
+  rand_r_seed = (unsigned int)time(NULL);
 
   // fill the vector with randomly-created bodies
   // bodies are constructed in-place using emplace, w/o copy constructor
@@ -77,6 +77,11 @@ void Universe::advance(const size_t psync_period) {
   ++turns_completed;
   if (psync_period > 0 && (0 == turns_completed % psync_period)) {
     cout << "psync took " << psync() << "µs" << endl;
+  }
+
+  if (false && 0 == (rand_r(&rand_r_seed) % 10000)) {
+    cout << "simulating failure - turns_completed = " << turns_completed << endl;
+    exit(1);
   }
 
 }

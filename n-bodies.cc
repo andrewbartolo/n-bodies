@@ -1,9 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
 
-// #include <GL/glew.h>
-// #include <GLFW/glfw3.h>    // check out bash history on your desktop to get a list of dependencies...
-
 
 // TODO:
 // determine sane body values
@@ -15,6 +12,8 @@
 
 #include "pheap.h"
 
+bool DEBUG = false;
+
 using namespace std;
 
 // replaces operators 'new' and 'delete' in the global namespace
@@ -22,13 +21,13 @@ using namespace std;
 // or could be defined only within the scope of the class
 
 void *operator new(size_t n) {
-  cout << "operator 'new' called" << endl;
+  if (DEBUG) cout << "operator 'new' called" << endl;
   return pmalloc(n);
   // it seems that placement new is automatically called for the class being instantiated...
 }
 
 void operator delete(void *p) throw() {
-  cout << "operator 'delete' called" << endl;
+  if (DEBUG) cout << "operator 'delete' called" << endl;
   pfree(p);
 }
 
@@ -52,12 +51,15 @@ int main(int argc, char *argv[]) {
   size_t num_turns = (size_t)strtol(argv[2], NULL, 10);
   size_t psync_period = (size_t)strtol(argv[3], NULL, 10);
 
-  Universe *u = new Universe(num_bodies);
-
+  pheap_init();
+  Universe *u = (argv[4]) ? (Universe *)0x7fdeaceea028 : new Universe(num_bodies);
+  
   cout << "simulating " << num_bodies << " bodies" << endl;
   if (0 != num_turns) {
     cout << "running for " << num_turns << " turns" << endl;
     u->runNTurns(num_turns, psync_period);    // TODO - coupling too tight
+
+    system("md5sum backing_file");      // quick-'n'-dirty determinism check
   }
   else {
     cout << "running forever" << endl;

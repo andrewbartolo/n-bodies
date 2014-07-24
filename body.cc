@@ -4,6 +4,8 @@
 
 #include "body.h"
 
+extern bool DEBUG;
+
 using namespace std;
 
 
@@ -21,10 +23,12 @@ void Body::applyForce(const Force &f) {
   vx += (f.x_comp / mass);
   vy += (f.y_comp / mass);
   vz += (f.z_comp / mass);
-  cout << "force x-component: " << f.x_comp << endl;
-  cout << "force y-component: " << f.y_comp << endl;
-  cout << "force z-component: " << f.z_comp << endl;
 
+  if (DEBUG) {
+    cout << "force x-component: " << f.x_comp << endl;
+    cout << "force y-component: " << f.y_comp << endl;
+    cout << "force z-component: " << f.z_comp << endl;
+  }
 }
 
 /**
@@ -35,7 +39,10 @@ void Body::updatePosition() {
   x += vx;
   y += vy;
   z += vz;
-  cout << "new x-position: " << x << endl;
-  cout << "new y-position: " << y << endl;
-  cout << "new z-position: " << z << endl;
+
+  if (DEBUG) {
+    cout << "new x-position: " << x << endl;
+    cout << "new y-position: " << y << endl;
+    cout << "new z-position: " << z << endl;
+  }
 }
