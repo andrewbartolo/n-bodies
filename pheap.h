@@ -15,6 +15,8 @@ extern void pheap_init();
 
 extern void *pmalloc(size_t size);
 
+extern void *prealloc(void *ptr, size_t size);
+
 extern void pfree(void *ptr);
 
 extern size_t psync();

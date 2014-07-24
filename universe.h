@@ -5,7 +5,12 @@
 
 #include "body.h"
 
+#include "pheap.h"
+
 #define G 6.67384e-11   // universal gravitational constant
+
+// using this larger value of G, body motion is made evident body.cc's position & force debugging printout
+//#define G 6.67384e-6
 
 
 class Universe {
@@ -13,10 +18,10 @@ class Universe {
 
 public:
 
-  Universe(size_t num_bodies);
-  void advance();
-  void run();
-  void runNTurns(size_t num_turns);
+  Universe(const size_t num_bodies);
+  void advance(const size_t psync_period);
+  void run(const size_t psync_period);
+  void runNTurns(const size_t num_turns, const size_t psync_period);
 
 private:
 
@@ -25,7 +30,7 @@ private:
   void addForce(const Body::Force &to_add, Body::Force &cumulative);
 
   std::vector<Body> bodies;
-
+  size_t turns_completed;
 };
 
 #endif

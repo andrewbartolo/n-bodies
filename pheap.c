@@ -149,6 +149,17 @@ void *pmalloc(size_t size) {
   return 1 + curr;    // return a pointer to the payload
 }
 
+/**
+ * Naive realloc; simply allocates a new block of size 'size', memcpys the old contents over,
+ * and frees the new block.
+ */
+void *prealloc(void *ptr, size_t size) {
+  void *new_chunk = pmalloc(size);
+  memcpy(new_chunk, ptr, ((mem_chunk_hdr_t *)ptr - 1)->size);   // TODO - make a macro to get size from payload ptr
+  pfree(ptr)
+;  return new_chunk;
+}
+
 // prepends the newly-freed block to the freelist.  basic; does not coalesce.
 void pfree(void *ptr) {
   if (first_run) pheap_init();

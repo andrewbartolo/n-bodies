@@ -7,11 +7,8 @@
 // #include <GLFW/glfw3.h>    // check out bash history on your desktop to get a list of dependencies...
 
 #include "universe.h"
-#include "pheap.h"
 
 #define RAND_DOUBLE (((double)rand()) / (double)RAND_MAX)   // uniform? distribution btwn [0, 1)
-
-#define G 6.67384e-11   // universal gravitational constant
 
 using namespace std;
 
@@ -23,9 +20,10 @@ using namespace std;
 // can't set vector size at declaration unless the contained type has a
 // default constructor.  Body does not, so we call reserve() in the
 // constructor instead
-Universe::Universe(size_t num_bodies) {//: bodies(num_bodies) {
+Universe::Universe(const size_t num_bodies) {//: bodies(num_bodies) {
   bodies.reserve(num_bodies);
-  srand(time(NULL));      // TODO - possible issue here with static storage
+  turns_completed = 0;
+  //srand(time(NULL));      // TODO - possible issue here with static storage
 
   // fill the vector with randomly-created bodies
   // bodies are constructed in-place using emplace, w/o copy constructor
@@ -49,7 +47,7 @@ Universe::Universe(size_t num_bodies) {//: bodies(num_bodies) {
  * considers every other point, checking to see if a collision has occurred (via volume
  * calculated from radius), and computes gravitational force.
  */
-void Universe::advance() {
+void Universe::advance(const size_t psync_period) {
   for (Body &outer : bodies) {
     // cumulative net force on the body considered in the outer for loop
     Body::Force net_force;
@@ -73,23 +71,31 @@ void Universe::advance() {
     b.updatePosition();
   }
 
+
+  // persistent heap API - need to program using a turn-based model?
+
+  ++turns_completed;
+  if (psync_period > 0 && (0 == turns_completed % psync_period)) {
+    cout << "psync took " << psync() << "µs" << endl;
+  }
+
 }
 
 /**
  * Runs the simulation indefinitely.
  */
-void Universe::run() {
+void Universe::run(const size_t psync_period) {
   while (true) {
-    advance();
+    advance(psync_period);
   }
 }
 
 /**
  * Runs the simulation for n turns.
  */
-void Universe::runNTurns(size_t num_turns) {
-  for (size_t i = 0; i < num_turns; ++i) {
-    advance();
+void Universe::runNTurns(const size_t num_turns, const size_t psync_period) {
+  for (size_t i = turns_completed; i < num_turns; ++i) {
+    advance(psync_period);
   }
 }
 
